@@ -83,7 +83,7 @@ void QuadPlane::tiltrotor_continuous_update(void)
             // Fanman74 - Comment out lift motors output for FWD flight
             //motors->output_motor_mask(tilt.current_throttle, mask, plane.rudder_dt);
 
-            // Fanman74 - Send throttle to boost_throttle channel instead
+            // Fanman74 - Send throttle to boost_throttle channel instead of lift motors
             SRV_Channels::set_output_scaled(SRV_Channel::k_boost_throttle, tilt.current_throttle * 1000);
             
             // Fanman74 - Ensure lift motors are off after transition
@@ -94,7 +94,7 @@ void QuadPlane::tiltrotor_continuous_update(void)
 
             // prevent motor shutdown
             //tilt.motors_active = true;
-
+            
             // Fanman74 - change to false
             tilt.motors_active = false;
         }
