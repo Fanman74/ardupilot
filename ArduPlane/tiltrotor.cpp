@@ -76,10 +76,27 @@ void QuadPlane::tiltrotor_continuous_update(void)
             tilt.current_throttle = 0;
         } else {
             // the motors are all the way forward, start using them for fwd thrust
-            uint8_t mask = is_zero(tilt.current_throttle)?0:(uint8_t)tilt.tilt_mask.get();
-            motors->output_motor_mask(tilt.current_throttle, mask, plane.rudder_dt);
+
+            // Fanman74 - Comment out due to compile error
+            //uint8_t mask = is_zero(tilt.current_throttle)?0:(uint8_t)tilt.tilt_mask.get();
+
+            // Fanman74 - Comment out lift motors output for FWD flight
+            //motors->output_motor_mask(tilt.current_throttle, mask, plane.rudder_dt);
+
+            // Fanman74 - Send throttle to boost_throttle channel instead
+            SRV_Channels::set_output_scaled(SRV_Channel::k_boost_throttle, tilt.current_throttle * 1000);
+            
+            // Fanman74 - Ensure lift motors are off after transition
+            // set PWM to 1100us but need to set to nominal lowpoint
+            SRV_Channels::set_output_scaled(SRV_Channel::k_motor1, 1100);
+            SRV_Channels::set_output_scaled(SRV_Channel::k_motor2, 1100);
+            SRV_Channels::set_output_scaled(SRV_Channel::k_motor4, 1100);
+
             // prevent motor shutdown
-            tilt.motors_active = true;
+            //tilt.motors_active = true;
+
+            // Fanman74 - change to false
+            tilt.motors_active = false;
         }
         return;
     }
