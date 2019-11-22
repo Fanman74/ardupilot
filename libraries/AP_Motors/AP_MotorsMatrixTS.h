@@ -19,7 +19,8 @@ public:
 
     virtual void        output_to_motors() override;
 
-    virtual void        output_motor_mask(float thrust, uint8_t mask, float rudder_dt) override;
+    //virtual void        output_motor_mask(float thrust, uint8_t mask, float rudder_dt) override;
+    virtual void        output_motor_mask(float thrust, uint8_t mask, float rudder_dt, bool use_boost) override;
 
 protected:
     // configures the motors for the defined frame_class and frame_type

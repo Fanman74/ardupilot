@@ -28,7 +28,10 @@ extern const AP_HAL::HAL& hal;
 // output a thrust to all motors that match a given motor mask. This
 // is used to control motors enabled for forward flight. Thrust is in
 // the range 0 to 1
-void AP_MotorsMatrixTS::output_motor_mask(float thrust, uint8_t mask, float rudder_dt)
+
+// Fanman74
+//void AP_MotorsMatrixTS::output_motor_mask(float thrust, uint8_t mask, float rudder_dt)
+void AP_MotorsMatrixTS::output_motor_mask(float thrust, uint8_t mask, float rudder_dt, bool use_boost)
 {
     const int16_t pwm_min = get_pwm_output_min();
     const int16_t pwm_range = get_pwm_output_max() - pwm_min;
@@ -49,6 +52,13 @@ void AP_MotorsMatrixTS::output_motor_mask(float thrust, uint8_t mask, float rudd
             }
             rc_write(i, motor_out);
         }
+    }
+    // Fanman74 - Output to boost motor
+    if (use_boost) {
+        // boost throttle is in the range 0 to 1000
+        SRV_Channels::set_output_scaled(SRV_Channel::k_boost_throttle, thrust * 1000);
+    } else {
+        SRV_Channels::set_output_scaled(SRV_Channel::k_boost_throttle, 0);
     }
 }
 
